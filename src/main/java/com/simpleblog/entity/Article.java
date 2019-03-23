@@ -53,7 +53,7 @@ public class Article {
 	@Temporal(TemporalType.DATE)
 	private Date updatedAt;
 	
-	@OneToMany(mappedBy="post_id", cascade=CascadeType.ALL, orphanRemoval=false)
+	@OneToMany(mappedBy="article", cascade=CascadeType.ALL, orphanRemoval=false)
 	private List<Comment> comments;
 	
 	@ManyToMany(cascade=CascadeType.ALL)

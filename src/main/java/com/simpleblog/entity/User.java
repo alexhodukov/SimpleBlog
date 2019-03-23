@@ -39,10 +39,10 @@ public class User {
 	@Temporal(TemporalType.DATE)
 	private Date createdAt;
 	
-	@OneToMany(mappedBy="author_id", cascade=CascadeType.ALL, orphanRemoval=true)
+	@OneToMany(mappedBy="user", cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<Article> articles;
 	
-	@OneToMany(mappedBy="author_id", cascade=CascadeType.ALL, orphanRemoval=false)
+	@OneToMany(mappedBy="user", cascade=CascadeType.ALL, orphanRemoval=false)
 	private List<Comment> comments;
 	
 	

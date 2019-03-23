@@ -2,14 +2,11 @@ package com.simpleblog.entity;
 
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
@@ -25,7 +22,7 @@ public class Tag {
 	@Column(name="name")
 	private String name;
 	
-	@ManyToMany(mappedBy="article_id")
+	@ManyToMany(mappedBy="tags")
 	private Set<Article> articles;
 
 	public Integer getId() {
