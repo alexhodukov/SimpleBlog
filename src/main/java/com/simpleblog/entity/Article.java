@@ -22,6 +22,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @Table(name="article")
 public class Article {
@@ -41,20 +43,23 @@ public class Article {
 	@Enumerated(EnumType.STRING)
 	private StatusArticle status;
 	
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="author_id")
 	private User user;
 	
 	@Column(name="created_at")
 	@Temporal(TemporalType.DATE)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date createdAt;
 	
 	@Column(name="updated_at")
 	@Temporal(TemporalType.DATE)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date updatedAt;
 	
 	@OneToMany(mappedBy="article", cascade=CascadeType.ALL, orphanRemoval=false)
 	private List<Comment> comments;
+	
 	
 	@ManyToMany(cascade=CascadeType.ALL)
 	@JoinTable(name="article_tag",

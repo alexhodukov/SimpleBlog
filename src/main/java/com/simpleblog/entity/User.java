@@ -14,6 +14,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @Table(name = "user")
 public class User {
@@ -37,6 +39,7 @@ public class User {
 	
 	@Column(name="created_at")
 	@Temporal(TemporalType.DATE)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date createdAt;
 	
 	@OneToMany(mappedBy="user", cascade=CascadeType.ALL, orphanRemoval=true)
