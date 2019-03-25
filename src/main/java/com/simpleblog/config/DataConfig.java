@@ -7,7 +7,6 @@ import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.ComponentScans;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -17,30 +16,35 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.simpleblog.security.UserDetailsServiceImpl;
 import com.simpleblog.service.ArticleService;
+import com.simpleblog.service.UserService;
+import com.simpleblog.utils.EnumUtilsProp;
 
 @Configuration
 @EnableTransactionManagement
 @PropertySource("classpath:db.properties")
 @EnableJpaRepositories("com.simpleblog.repository")
-@ComponentScans(value = { @ComponentScan("com.simpleblog.entity"),
-						  @ComponentScan("com.simpleblog.service")})
+@ComponentScan("com.simpleblog")
 public class DataConfig {
-	
-	private static final String PROP_DATABASE_DRIVER = "db.driver";
-	private static final String PROP_DATABASE_URL = "db.url";
-	private static final String PROP_DATABASE_USERNAME = "db.username";
-    private static final String PROP_DATABASE_PASSWORD = "db.password";
-    private static final String PROP_HIBERNATE_DIALECT = "hibernate.dialect";
-    private static final String PROP_HIBERNATE_SHOW_SQL = "hibernate.show_sql";
-    private static final String PROP_ENTITYMANAGER_PACKAGES_TO_SCAN = "entitymanager.packages.to.scan";
     
     @Bean
 	public ArticleService articleService() {
 		return new ArticleService();
 	}
+    
+    @Bean UserService userService() {
+    	return new UserService();
+    }
+    
+    @Bean
+    public UserDetailsService getUserDetailsService(){
+        return new UserDetailsServiceImpl();
+    }
     
     @Resource
     private Environment env;
@@ -49,12 +53,22 @@ public class DataConfig {
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
 
-        dataSource.setDriverClassName(env.getRequiredProperty(PROP_DATABASE_DRIVER));
-        dataSource.setUrl(env.getRequiredProperty(PROP_DATABASE_URL));
-        dataSource.setUsername(env.getRequiredProperty(PROP_DATABASE_USERNAME));
-        dataSource.setPassword(env.getRequiredProperty(PROP_DATABASE_PASSWORD));
+        dataSource.setDriverClassName(env.getRequiredProperty(EnumUtilsProp.DB_DRIVER.getString()));
+        dataSource.setUrl(env.getRequiredProperty(EnumUtilsProp.DB_URL.getString()));
+        dataSource.setUsername(env.getRequiredProperty(EnumUtilsProp.DB_USERNAME.getString()));
+        dataSource.setPassword(env.getRequiredProperty(EnumUtilsProp.DB_PASSWORD.getString()));
 
         return dataSource;
+    }
+    
+    private Properties getHibernateProperties() {
+        Properties properties = new Properties();
+        properties.put(EnumUtilsProp.HIBERNATE_DIALECT.getString(), 
+        		env.getRequiredProperty(EnumUtilsProp.HIBERNATE_DIALECT.getString()));
+        properties.put(EnumUtilsProp.HIBERNATE_SHOW_SQL.getString(), 
+        		env.getRequiredProperty(EnumUtilsProp.HIBERNATE_SHOW_SQL.getString()));
+
+        return properties;
     }
     
     @Bean
@@ -62,27 +76,22 @@ public class DataConfig {
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = 
         		new LocalContainerEntityManagerFactoryBean();
         entityManagerFactoryBean.setDataSource(dataSource());
-        entityManagerFactoryBean.setPackagesToScan(env.getRequiredProperty(PROP_ENTITYMANAGER_PACKAGES_TO_SCAN));
-        JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        entityManagerFactoryBean.setJpaVendorAdapter(vendorAdapter);
+        entityManagerFactoryBean.setPackagesToScan(env.getRequiredProperty(EnumUtilsProp.PACKAGES_TO_SCAN.getString()));
+        entityManagerFactoryBean.setJpaVendorAdapter(jpaVendorAdapter());
         entityManagerFactoryBean.setJpaProperties(getHibernateProperties());
 
         return entityManagerFactoryBean;
     }
+    
+    @Bean
+	public JpaVendorAdapter jpaVendorAdapter() {
+		return new HibernateJpaVendorAdapter();
+	}
 
     @Bean
-    public JpaTransactionManager transactionManager() {
-        JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
-
-        return transactionManager;
+    public PlatformTransactionManager transactionManager() {
+        return new JpaTransactionManager(entityManagerFactory().getObject());
     }
 
-    private Properties getHibernateProperties() {
-        Properties properties = new Properties();
-        properties.put(PROP_HIBERNATE_DIALECT, env.getRequiredProperty(PROP_HIBERNATE_DIALECT));
-        properties.put(PROP_HIBERNATE_SHOW_SQL, env.getRequiredProperty(PROP_HIBERNATE_SHOW_SQL));
-
-        return properties;
-    }
+    
 }
