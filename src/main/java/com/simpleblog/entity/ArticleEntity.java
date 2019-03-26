@@ -26,7 +26,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name="article")
-public class Article {
+public class ArticleEntity {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -41,11 +41,11 @@ public class Article {
 	
 	@Column(name="status")
 	@Enumerated(EnumType.STRING)
-	private StatusArticle status;
+	private ArticleStatus status;
 	
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="author_id")
-	private User user;
+	private UserEntity user;
 	
 	@Column(name="created_at")
 	@Temporal(TemporalType.DATE)
@@ -66,10 +66,6 @@ public class Article {
 				joinColumns=@JoinColumn(name="article_id"),
 				inverseJoinColumns=@JoinColumn(name="tag_id"))
 	private Set<Tag> tags;
-	
-	static enum StatusArticle {
-		PUBLIC, DRAFT;
-	}
 
 	public Integer getId() {
 		return id;
@@ -95,19 +91,19 @@ public class Article {
 		this.text = text;
 	}
 
-	public StatusArticle getStatus() {
+	public ArticleStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(StatusArticle status) {
+	public void setStatus(ArticleStatus status) {
 		this.status = status;
 	}
 
-	public User getUser() {
+	public UserEntity getUser() {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(UserEntity user) {
 		this.user = user;
 	}
 
@@ -149,7 +145,7 @@ public class Article {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Article other = (Article) obj;
+		ArticleEntity other = (ArticleEntity) obj;
 		if (createdAt == null) {
 			if (other.createdAt != null)
 				return false;

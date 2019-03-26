@@ -1,15 +1,14 @@
 package com.simpleblog.entity;
 
 import java.util.Date;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -18,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name = "user")
-public class User {
+public class UserEntity {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -42,11 +41,35 @@ public class User {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date createdAt;
 	
-	@OneToMany(mappedBy="user", cascade=CascadeType.ALL, orphanRemoval=true)
-	private List<Article> articles;
+	@Column(name="role")
+	@Enumerated(EnumType.STRING)
+	private RoleName role;
 	
-	@OneToMany(mappedBy="user", cascade=CascadeType.ALL, orphanRemoval=false)
-	private List<Comment> comments;
+	public UserEntity() {
+		
+	}
+	
+	public UserEntity(String firstName, String lastName, String email, String password) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.password = password;
+	}
+	
+	
+	public RoleName getRole() {
+		return role;
+	}
+
+	public void setRole(RoleName role) {
+		this.role = role;
+	}
+	
+//	@OneToMany(mappedBy="user", cascade=CascadeType.ALL, orphanRemoval=true)
+//	private List<Article> articles;
+//	
+//	@OneToMany(mappedBy="user", cascade=CascadeType.ALL, orphanRemoval=false)
+//	private List<Comment> comments;
 	
 	
 
@@ -119,7 +142,7 @@ public class User {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		User other = (User) obj;
+		UserEntity other = (UserEntity) obj;
 		if (createdAt == null) {
 			if (other.createdAt != null)
 				return false;

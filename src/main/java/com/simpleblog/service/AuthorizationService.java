@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import com.simpleblog.dto.UserLoginDto;
 import com.simpleblog.dto.UserRegisterDto;
 import com.simpleblog.entity.RoleName;
-import com.simpleblog.entity.User;
+import com.simpleblog.entity.UserEntity;
 import com.simpleblog.repository.UserRepository;
 import com.simpleblog.security.jwt.JwtProvider;
 
@@ -42,6 +42,7 @@ public class AuthorizationService {
 		Authentication authentication = authenticationManager.authenticate(
         		new UsernamePasswordAuthenticationToken(userLoginDto.getEmail(), userLoginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
         return jwtProvider.generateJwtToken(authentication);
 	}
 	
@@ -51,7 +52,7 @@ public class AuthorizationService {
             return false;
         }
  
-        User user = new User(userRegisterDto.getName(), userRegisterDto.getUsername(), userRegisterDto.getEmail(), 
+        UserEntity user = new UserEntity(userRegisterDto.getName(), userRegisterDto.getUsername(), userRegisterDto.getEmail(), 
         		encoder.encode(userRegisterDto.getPassword()));
         user.setCreatedAt(new Date(System.currentTimeMillis()));
         user.setRole(RoleName.USER);

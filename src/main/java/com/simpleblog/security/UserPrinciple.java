@@ -10,15 +10,15 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.simpleblog.entity.User;
+import com.simpleblog.entity.UserEntity;
 
 public class UserPrinciple implements UserDetails {
 	 
 	 private Integer id;
 	 
-	 private String name;
+	 private String firstName;
 	 
-	 private String username;
+	 private String lastName;
 	 
 	 private String email;
 	 
@@ -31,32 +31,27 @@ public class UserPrinciple implements UserDetails {
 			 String username, String email, String password, 
 			 Collection<? extends GrantedAuthority> authorities) {
 		 this.id = id;
-	     this.name = name;
-	     this.username = username;
+	     this.firstName = name;
+	     this.lastName = username;
 	     this.email = email;
 	     this.password = password;
 	     this.authorities = authorities;
 	 }
 	 
-	 public static UserPrinciple build(User user) {
-		 List<GrantedAuthority> authorities = 
-				 Arrays.asList(new SimpleGrantedAuthority(user.getRole().name()));
-		 return new UserPrinciple(
-				 user.getId(),
-	             user.getFirstName(),
-	             user.getLastName(),
-	             user.getEmail(),
-	             user.getPassword(),
-	             authorities
-	     );
+	 public static UserPrinciple build(UserEntity user) {
+		 List<GrantedAuthority> authorities = Arrays.asList(
+				 new SimpleGrantedAuthority(user.getRole().name()));
+		 
+		 return new UserPrinciple(user.getId(), user.getFirstName(), user.getEmail(), user.getEmail(),
+				 user.getPassword(), authorities);
 	 }
 	 
 	 public Integer getId() {
 	     return id;
 	 }
 	 
-	 public String getName() {
-	     return name;
+	 public String getFirstName() {
+	     return firstName;
 	 }
 	 
 	 public String getEmail() {
@@ -65,7 +60,7 @@ public class UserPrinciple implements UserDetails {
 	 
 	 @Override
 	 public String getUsername() {
-	     return username;
+	     return lastName;
 	 }
 	 
 	 @Override
@@ -109,7 +104,7 @@ public class UserPrinciple implements UserDetails {
 
 	@Override
 	public String toString() {
-		return "UserPrinciple [id=" + id + ", name=" + name + ", username=" + username + ", email=" + email
+		return "UserPrinciple [id=" + id + ", name=" + firstName + ", username=" + lastName + ", email=" + email
 				+ ", password=" + password + ", authorities=" + authorities + "]";
 	}	
 

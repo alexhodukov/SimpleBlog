@@ -30,11 +30,11 @@ public class Comment {
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="article_id")
-	private Article article;
+	private ArticleEntity article;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="author_id")
-	private User user;
+	private UserEntity user;
 	
 	@Column(name="created_at")
 	@Temporal(TemporalType.DATE)
@@ -57,19 +57,19 @@ public class Comment {
 		this.message = message;
 	}
 
-	public Article getArticle() {
+	public ArticleEntity getArticle() {
 		return article;
 	}
 
-	public void setArticle(Article article) {
+	public void setArticle(ArticleEntity article) {
 		this.article = article;
 	}
 
-	public User getUser() {
+	public UserEntity getUser() {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(UserEntity user) {
 		this.user = user;
 	}
 

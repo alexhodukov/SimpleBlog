@@ -24,26 +24,26 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class DataConfig {
 	
 	@Bean
-	public ConfigPropDatabase confiPropgDb() {
-		return new ConfigPropDatabase();
+	public ConfigPropertiesDatabase configDb() {
+		return new ConfigPropertiesDatabase();
 	}
 	
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
 
-        dataSource.setDriverClassName(confiPropgDb().getDbDriver());
-        dataSource.setUrl(confiPropgDb().getDbUrl());
-        dataSource.setUsername(confiPropgDb().getDbUsername());
-        dataSource.setPassword(confiPropgDb().getDbPassword());
+        dataSource.setDriverClassName(configDb().getDbDriver());
+        dataSource.setUrl(configDb().getDbUrl());
+        dataSource.setUsername(configDb().getDbUsername());
+        dataSource.setPassword(configDb().getDbPassword());
 
         return dataSource;
     }
     
     private Properties getHibernateProperties() {
         Properties properties = new Properties();
-        properties.put(confiPropgDb().getDialect(), confiPropgDb().getDialect());
-        properties.put(confiPropgDb().getShowSql(), confiPropgDb().getShowSql());
+        properties.put(configDb().getDialect(), configDb().getDialect());
+        properties.put(configDb().getShowSql(), configDb().getShowSql());
 
         return properties;
     }
@@ -53,7 +53,7 @@ public class DataConfig {
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = 
         		new LocalContainerEntityManagerFactoryBean();
         entityManagerFactoryBean.setDataSource(dataSource());
-        entityManagerFactoryBean.setPackagesToScan(confiPropgDb().getPackageToScan());
+        entityManagerFactoryBean.setPackagesToScan(configDb().getPackageToScan());
         entityManagerFactoryBean.setJpaVendorAdapter(jpaVendorAdapter());
         entityManagerFactoryBean.setJpaProperties(getHibernateProperties());
 

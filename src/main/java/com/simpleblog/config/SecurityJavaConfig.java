@@ -56,6 +56,7 @@ public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
         	.authorizeRequests()
             .antMatchers("/signin").permitAll()
             .antMatchers("/signup").permitAll()
+            .antMatchers("/articles").permitAll()
             .anyRequest().authenticated()
             .and()
             .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()

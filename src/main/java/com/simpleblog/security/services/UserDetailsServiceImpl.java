@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.simpleblog.entity.User;
+import com.simpleblog.entity.UserEntity;
 import com.simpleblog.repository.UserRepository;
 import com.simpleblog.security.UserPrinciple;
 
@@ -22,10 +22,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    	User user = userRepository.findByEmail(username)
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    	UserEntity user = userRepository.findByEmail(email)
     			.orElseThrow(() -> 
-    			new UsernameNotFoundException("User Not Found with -> username or email : " + username));
+    			new UsernameNotFoundException("User Not Found with -> email : " + email));
 
       return UserPrinciple.build(user);
     }

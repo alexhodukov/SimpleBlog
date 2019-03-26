@@ -3,7 +3,9 @@ package com.simpleblog.config;
 import javax.servlet.Filter;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.web.authentication.DelegatingAuthenticationFailureHandler;
 import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
@@ -11,7 +13,7 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 public class WebInit extends AbstractAnnotationConfigDispatcherServletInitializer {
 	@Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class<?>[]{DataConfig.class};
+        return new Class<?>[]{DataConfig.class, AppConfig.class, SecurityJavaConfig.class};
     }
 
     @Override

@@ -23,7 +23,7 @@ public class Tag {
 	private String name;
 	
 	@ManyToMany(mappedBy="tags")
-	private Set<Article> articles;
+	private Set<ArticleEntity> articles;
 
 	public Integer getId() {
 		return id;
