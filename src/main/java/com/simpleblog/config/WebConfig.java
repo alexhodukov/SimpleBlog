@@ -14,7 +14,7 @@ import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = { "com.simpleblog.controller" })
+@ComponentScan("com.simpleblog.controller")
 public class WebConfig implements WebMvcConfigurer {
 	
 	public MappingJackson2HttpMessageConverter jacksonMessageConverter(){
